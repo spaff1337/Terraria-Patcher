@@ -1,5 +1,5 @@
 # Installation
-- Make sure you have dotnet 8.0 installed
+- Make sure you have .net 8.0 installed
 - Download the terraria-patcher.exe file from releases tab or compile it yourself
 
 # Usage
