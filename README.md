@@ -7,7 +7,6 @@
 - Double click terraria-patcher.exe
 
 # Features
-Features:
 - Unlimited potion buffs at 30 stack
 - Shorter respawn timer
 - Removed fishing line breaking
