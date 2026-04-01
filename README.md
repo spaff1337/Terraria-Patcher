@@ -21,4 +21,5 @@
 
 # Known issues
 - Being able to have all 3 food buffs at once
+- Unlimited buffs not being applied when in piggy bank or void bag
 - Having to restart the game to revert the patches
