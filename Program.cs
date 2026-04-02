@@ -463,6 +463,55 @@ class TerrariaPatcher {
 		
 		Console.WriteLine("Sword shrine patched to always generate.");
 	}
+
+	static void PatchPyramidGeneration() {
+		string pattern =
+			"66 0F D6 47 08 80 3D ?? ?? ?? ?? 00 74 ?? 8B 0D ?? ?? ?? ?? 39 09 E8 ?? ?? ?? ?? 85 C0 75 ?? 8D 4D E4 8D 55 C0";
+			
+		IntPtr addr = FindPattern(pattern);
+		
+		if (addr == IntPtr.Zero) {
+			Console.WriteLine("Pyramid patch instruction not found.");
+			return;
+		}
+		
+		IntPtr pyramidCheckAddr = addr + 12;
+		
+		Console.WriteLine($"Pyramid instruction at: 0x{addr.ToString("X")}");
+		
+		byte[] newBytes = new byte[] {
+			0x90, 0x90
+		};
+		
+		WriteBytes(pyramidCheckAddr, newBytes);
+		
+		Console.WriteLine("Pyramid patched to always generate.");
+	}
+	
+	static void PatchFishingLineBreaking() {
+		string pattern =
+			"8B 08 BA 07 00 00 00 39 09 E8 ?? ?? ?? ?? 85 C0 75 ?? 80 BF ?? ?? ?? ?? 00 75 ?? 8B 46 40 83 78 04 00";
+			
+		IntPtr addr = FindPattern(pattern);
+		
+		if (addr == IntPtr.Zero) {
+			Console.WriteLine("Fishing line breaking instruction not found.");
+			return;
+		}
+		
+		IntPtr pyramidCheckAddr = addr + 3;
+		
+		Console.WriteLine($"Fishing line breaking instruction at: 0x{addr.ToString("X")}");
+		
+		// 18 69 F
+		byte[] newBytes = new byte[] {
+			0x18, 0x69, 0x0F, 0x00
+		};
+		
+		WriteBytes(pyramidCheckAddr, newBytes);
+		
+		Console.WriteLine("Fishing line will no longer break.");
+	}
 	
 	static void UnnerfReaverShark() {
 		string pattern =
@@ -494,6 +543,73 @@ class TerrariaPatcher {
 		WriteBytes(checkAddrPickPower, newBytes);
 		
 		Console.WriteLine("Reaver shark unnerfed.");
+	}
+
+	static void PatchRespawnTime() {
+		string pattern =
+			"85 C0 7E ?? B8 10 0E 00 00 EB ?? 83 7D F8 00";
+		string pattern2 =
+			"85 C0 7E ?? B8 10 0E 00 00 EB ?? 83 7D F4 00";
+
+		string pattern3 =
+			"FF 15 ?? ?? ?? ?? 85 C0 0F 85 ?? ?? ?? ?? 83 BE BC 03 00 00 00 7E ?? 8B 86 BC 03 00 00 48 89 45 ?? 81 7D ?? 10 0E 00 00";
+		string pattern4 =
+			"83 3D ?? ?? ?? ?? 02 0F 85 ?? ?? ?? ?? C6 86 40 07 00 00 01 E9 ?? ?? ?? ?? 8B 86 BC 03 00 00 48 89 45 ?? 81 7D ?? 10 0E 00 00";
+	
+		string pattern5 = 
+			"83 C8 FF EB ?? 81 7D ?? 10 0E 00 00 7E ?? B8 01 00 00 00 EB ?? 33 C0 85 C0 7E ?? B8 10 0E 00 00 EB ?? 83 7D ?? 00 7D ?? 83 C8 FF EB ?? 83 7D ?? 00 7E ?? B8 01 00 00 00 EB ?? 33 C0 85 C0 7D ?? 33 C0 EB ?? 8B 45 ?? 89 86 BC 03 00 00 E9 ?? ?? ?? ?? 8B 46 04 3B 05 ?? ?? ?? ?? 74 ?? 83 3D ?? ?? ?? ?? 02";
+		string pattern6 = 
+			"83 C8 FF EB ?? 81 7D ?? 10 0E 00 00 7E ?? B8 01 00 00 00 EB ?? 33 C0 85 C0 7E ?? B8 10 0E 00 00 EB ?? 83 7D ?? 00 7D ?? 83 C8 FF EB ?? 83 7D ?? 00 7E ?? B8 01 00 00 00 EB ?? 33 C0 85 C0 7D ?? 33 C0 EB ?? 8B 45 ?? 89 86 BC 03 00 00 83 BE BC 03 00 00 00 7F ?? A1 ?? ?? ?? ?? 3B 46 04 75 ?? A1 ?? ?? ?? ??";
+
+		IntPtr addr = FindPattern(pattern);
+		IntPtr addr2 = FindPattern(pattern2);
+
+		IntPtr addr3 = FindPattern(pattern3);
+		IntPtr addr4 = FindPattern(pattern4);
+
+		IntPtr addr5 = FindPattern(pattern5);
+		IntPtr addr6 = FindPattern(pattern6);
+		
+		if (addr == IntPtr.Zero) {
+			Console.WriteLine("Respawn time patch instruction not found.");
+			return;
+		}
+
+		if (addr2 == IntPtr.Zero) {
+			Console.WriteLine("Respawn time patch instruction 2 not found.");
+			return;
+		}
+		
+		if (addr3 == IntPtr.Zero) {
+			Console.WriteLine("Respawn time patch instruction 3 not found.");
+			return;
+		}
+		
+		if (addr4 == IntPtr.Zero) {
+			Console.WriteLine("Respawn time patch instruction 4 not found.");
+			return;
+		}
+		
+		IntPtr checkAddrUseAnim = addr + 5;
+		IntPtr checkAddrUseAnim2 = addr2 + 5;
+
+		IntPtr checkAddrUseAnim3 = addr3 + 36;
+		IntPtr checkAddrUseAnim4 = addr4 + 38;
+
+		IntPtr checkAddrUseAnim5 = addr5 + 8;
+		IntPtr checkAddrUseAnim6 = addr6 + 8;
+
+		Console.WriteLine($"Respawn time instruction at: 0x{addr.ToString("X")}");
+		
+		byte[] newBytes = new byte[] { 0xB4, 0x00, 0x00, 0x00 };
+		WriteBytes(checkAddrUseAnim, newBytes);
+		WriteBytes(checkAddrUseAnim2, newBytes);
+		WriteBytes(checkAddrUseAnim3, newBytes);
+		WriteBytes(checkAddrUseAnim4, newBytes);
+		WriteBytes(checkAddrUseAnim5, newBytes);
+		WriteBytes(checkAddrUseAnim6, newBytes);
+		
+		Console.WriteLine("Respawn time patched to max 3 seconds.");
 	}
 	
 	static void Main() {
@@ -550,17 +666,20 @@ class TerrariaPatcher {
 		PatchTerragrimChance();
 		UnnerfReaverShark();
 		PatchSwordShrineGeneration();
+		PatchPyramidGeneration();
 
 		PatchFishingCrateLootOverride();
-		PatchBetterWingsChestChance();	
+		PatchBetterWingsChestChance();
+		PatchRespawnTime();
+		PatchFishingLineBreaking();
 		
 		PatchFossilShatter();
 		PatchTombstone();
 		PatchFullRespawnHP();
 		
-		while (true) {
+		/*while (true) {
 			// update player address each time menu state is changed
-			bool inMenu = ReadByte(flagAddress) != false;
+			/*bool inMenu = ReadByte(flagAddress) != false;
 			
 			if (!oldMenuState && inMenu || oldMenuState && !inMenu) {
 				oldMenuState = inMenu;
@@ -568,7 +687,17 @@ class TerrariaPatcher {
 				playerAddr = GetLocalPlayer(addr);
 			}
 			
-			if (!inMenu) {
+
+			playerAddr = GetLocalPlayer(addr);
+			
+
+			OverrideRespawnTimer();
+			DisableFishingLineBreak();
+		
+			UnlimitedBuffsCheck();
+
+
+			/*if (!inMenu) {
 				OverrideRespawnTimer();
 				DisableFishingLineBreak();
 			
@@ -576,7 +705,7 @@ class TerrariaPatcher {
 			}
 			
 			Thread.Sleep(2);
-		}
+		}*/
 		
 		CloseHandle(hProcess);
 	}
