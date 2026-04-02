@@ -7,7 +7,6 @@
 - Double click terraria-patcher.exe
 
 # Features
-- Unlimited potion buffs at 30 stack
 - Shorter respawn timer
 - Removed fishing line breaking
 - Removed fossil shattering when mined
@@ -17,9 +16,8 @@
 - Increased terragrim drop rate from 3.3% to 10%
 - Replaced tin bars in wood and pearlwood fishing crates with herb bags
 - Made worlds always generate at least 1 enchanted sword shrine
+- Made worlds always generate at least 1 pyramid
 - Unnerfed reaver shark to before 1.4 update
 
-# Known issues
-- Being able to have all 3 food buffs at once
-- Unlimited buffs not being applied when in piggy bank or void bag
-- Having to restart the game to revert the patches
+# Note
+- You have to restart the game to get rid of the patches
