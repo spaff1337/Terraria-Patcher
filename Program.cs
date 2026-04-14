@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+// compile cmd
 // dotnet publish -c Release -r win-x86 --self-contained true
 
 class TerrariaPatcher {
